@@ -80,7 +80,7 @@ def detect_color():
     root.after(10, detect_color)
 
 root = tk.Tk()
-root.title("Serial Sender")
+root.title("Hoang Trung Quan App 2025")
 root.geometry("300x150")
 
 btn_send = tk.Button(
