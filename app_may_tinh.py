@@ -81,7 +81,7 @@ def detect_color():
 
 root = tk.Tk()
 root.title("Hoang Trung Quan App 2025")
-root.geometry("300x150")
+root.geometry("360x150")
 
 btn_send = tk.Button(
     root, 
