@@ -24,7 +24,7 @@ lower_blue = np.array([100, 50, 50])
 upper_blue = np.array([130, 255, 255])
 
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 def send_serial():
     if ser.is_open:
@@ -80,7 +80,7 @@ def detect_color():
     root.after(10, detect_color)
 
 root = tk.Tk()
-root.title("Hoang Trung Quan App 2025")
+root.title("3 DOF Robotic Arm Control App")
 root.geometry("360x150")
 
 btn_send = tk.Button(
