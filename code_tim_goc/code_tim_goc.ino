@@ -114,16 +114,20 @@ void nhatMauXanhOViTri2(){
 
 
 void setup() {
+  Serial.begin(9600);
   updown2Servo.attach(7);
   updown1Servo.attach(8);
   baseServo.attach(9);    
   gripperServo.attach(10);    
 
-  nhatMauDoOViTri2();
-  delay(1000);
-  nhatMauXanhOViTri1();
+  quayVeGoc();
 }
 
 void loop() {
-  // Không cần làm gì trong loop
+  if (Serial.available()) {
+    int code = Serial.parseInt();
+    if(code == 1){
+      nhatMauXanhOViTri2();
+    }
+  }
 }
