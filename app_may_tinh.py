@@ -84,7 +84,7 @@ def detect_case(frame):
     elif "A:Red" in labels and "B:Blue" in labels:
         code = 6
 
-    return ", ".join(labels) if labels else "Khong co khoi", code
+    return ", ".join(labels) if labels else "No Object", code
 
 def vision_loop():
     global latest_code, latest_label

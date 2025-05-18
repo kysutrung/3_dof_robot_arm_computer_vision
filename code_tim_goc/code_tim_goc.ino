@@ -44,7 +44,7 @@ void quayVeGoc(){
   baseServo.write(70);
 }
 
-void nhatMauDoOViTri1(){
+void nhatMauDoOViTriB(){
   quayVeGoc();
   delay(1000);
   haCanhTayXuong1();
@@ -61,7 +61,7 @@ void nhatMauDoOViTri1(){
   quayVeGoc();
 }
 
-void nhatMauDoOViTri2(){
+void nhatMauDoOViTriA(){
   quayVeGoc();
   delay(1000);
   haCanhTayXuong2();
@@ -78,7 +78,7 @@ void nhatMauDoOViTri2(){
   quayVeGoc();
 }
 
-void nhatMauXanhOViTri1(){
+void nhatMauXanhOViTriB(){
   quayVeGoc();
   delay(1000);
   haCanhTayXuong1();
@@ -95,7 +95,7 @@ void nhatMauXanhOViTri1(){
   quayVeGoc();
 }
 
-void nhatMauXanhOViTri2(){
+void nhatMauXanhOViTriA(){
   quayVeGoc();
   delay(1000);
   haCanhTayXuong2();
@@ -127,7 +127,26 @@ void loop() {
   if (Serial.available()) {
     int code = Serial.parseInt();
     if(code == 1){
-      nhatMauXanhOViTri2();
+      nhatMauXanhOViTriA();
+    }
+    if(code == 2){
+      nhatMauDoOViTriA();
+    }
+    if(code == 3){
+      nhatMauXanhOViTriB();
+    }
+    if(code == 4){
+      nhatMauDoOViTriB();
+    }
+    if(code == 5){
+      nhatMauDoOViTriB();
+      delay(1000);
+      nhatMauXanhOViTriA();
+    }
+    if(code == 6){
+      nhatMauXanhOViTriB();
+      delay(1000);
+      nhatMauDoOViTriA();
     }
   }
 }
