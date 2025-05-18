@@ -5,11 +5,9 @@ import time
 import threading
 import tkinter as tk
 
-# === Cấu hình Serial ===
-SERIAL_PORT = 'COM15'  # Thay đổi theo cổng Arduino
+SERIAL_PORT = 'COM15'
 BAUD_RATE = 9600
 
-# === Giao diện chính ===
 root = tk.Tk()
 root.title("Robot Vision Control")
 root.geometry("300x120")
@@ -67,7 +65,6 @@ def detect_case(frame):
         else:
             labels.append("B:Blue")
 
-    # Mã trạng thái
     code = 0
     if labels == []:
         code = 0
@@ -132,16 +129,12 @@ def connect_serial():
     except:
         print(f"[Lỗi kết nối] Không thể mở cổng {SERIAL_PORT}")
 
-# Nút giao diện
+
 btn_connect = tk.Button(root, text="Kết nối tay gắp", font=('Arial', 12), command=connect_serial)
 btn_connect.pack(pady=10)
-
 btn_send = tk.Button(root, text="Bắt đầu gắp", font=('Arial', 12), command=send_once, state='disabled')
 btn_send.pack(pady=10)
-
-# Bắt đầu luồng camera
 vision_thread = threading.Thread(target=vision_loop, daemon=True)
 vision_thread.start()
 
-# Chạy giao diện
 root.mainloop()
