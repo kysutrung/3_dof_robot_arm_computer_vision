@@ -5,23 +5,9 @@ import pygame
 import os
 import threading
 import tkinter as tk
-import serial
-import time
 
-# ⚙️ Cấu hình Serial
-SERIAL_PORT = 'COM15'   # Đổi cổng COM phù hợp với máy bạn
-BAUD_RATE = 9600
+dot_count = 0  # Tổng số chấm toàn cục
 
-# 🎮 Giao diện
-root = tk.Tk()
-root.title("TAULUA888")
-root.geometry("300x200")
-
-# 🟡 Biến toàn cục
-dot_count = 0
-ser = None
-
-# 🔍 Zoom ảnh
 def digital_zoom(frame, zoom_factor=1):
     h, w = frame.shape[:2]
     new_w, new_h = w // zoom_factor, h // zoom_factor
@@ -31,7 +17,6 @@ def digital_zoom(frame, zoom_factor=1):
     zoomed = cv2.resize(cropped, (w, h), interpolation=cv2.INTER_LINEAR)
     return zoomed
 
-# 🔊 Đọc kết quả tiếng Việt
 def speak_vi(text, filename="speak.mp3"):
     tts = gTTS(text=text, lang='vi')
     tts.save(filename)
@@ -51,35 +36,14 @@ def speak_result():
     else:
         speak_vi("Không rõ kết quả")
 
-# 🔌 Gửi số 1 tới Arduino
-def send_1_to_arduino():
-    try:
-        if ser is None or not ser.is_open:
-            print("[Lỗi] Chưa kết nối Arduino!")
-            return
-        ser.write(b'1\n')
-        print("[GỬI] Đã gửi số 1 đến Arduino")
-    except Exception as e:
-        print("[Lỗi gửi số 1]", e)
-
-# 🔗 Kết nối Arduino
-def connect_serial():
-    global ser
-    try:
-        ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
-        time.sleep(2)
-        print(f"[KẾT NỐI] Arduino tại {SERIAL_PORT}")
-        btn_send1.config(state='normal')
-    except:
-        print(f"[Lỗi] Không thể mở cổng {SERIAL_PORT}")
-
-# 📷 Nhận diện xúc xắc
 def read_dice():
     global dot_count
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         print("Không mở được camera!")
         return
+
+    prev_dot_count = -1
 
     while True:
         ret, frame = cap.read()
@@ -115,29 +79,32 @@ def read_dice():
         cv2.putText(zoomed_frame, f"So cham: {dot_count}", (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
 
-        cv2.imshow("Nhan dien xuc xac", zoomed_frame)
+        cv2.imshow("Nhan dien xuc xac (da fix size)", zoomed_frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
     cap.release()
     cv2.destroyAllWindows()
 
-# 🔁 Khởi động camera ở luồng riêng
 def start_camera_thread():
     t = threading.Thread(target=read_dice, daemon=True)
     t.start()
 
-# 🖼️ GUI
-btn_read = tk.Button(root, text="Đọc kết quả", font=("Arial", 12), command=lambda: threading.Thread(target=speak_result).start())
-btn_read.pack(pady=10)
+def create_gui():
+    root = tk.Tk()
+    root.title("Xúc Xắc Tài Xỉu")
+    root.geometry("300x150")
 
-btn_connect = tk.Button(root, text="Kết nối cánh tay", font=("Arial", 12), command=connect_serial)
-btn_connect.pack(pady=5)
+    label = tk.Label(root, text="Nhấn nút để đọc kết quả:", font=("Arial", 12))
+    label.pack(pady=10)
 
-btn_send1 = tk.Button(root, text="Mở bát", font=("Arial", 12), command=send_1_to_arduino, state='disabled')
-btn_send1.pack(pady=5)
+    btn = tk.Button(root, text="Đọc kết quả", font=("Arial", 14), command=lambda: threading.Thread(target=speak_result).start())
+    btn.pack(pady=10)
 
-# 🚀 Chạy camera
+    root.mainloop()
+
+# Khởi động camera xử lý song song
 start_camera_thread()
 
-root.mainloop()
+# Giao diện người dùng
+create_gui()
